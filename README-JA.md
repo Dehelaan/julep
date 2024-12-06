@@ -49,13 +49,12 @@ Julep プロジェクトに新しい貢献者を迎えられることを嬉し�
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<h3>📖 目次</h3>
+<h3>📖 Table of Contents</h3>
 
-- [貢献者募集🌟](#貢献者募集)
-- [主な特徴](#主な特徴)
-- [簡単な例](#簡単な例)
-- [インストール](#インストール)
-- [Python クイックスタート 🐍](#python-クイックスタート-)
+- [主な特徴](#%E4%B8%BB%E3%81%AA%E7%89%B9%E5%BE%B4)
+- [簡単な例](#%E7%B0%A1%E5%8D%98%E3%81%AA%E4%BE%8B)
+- [インストール](#%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB)
+- [Python クイックスタート 🐍](#python-%E3%82%AF%E3%82%A4%E3%83%83%E3%82%AF%E3%82%B9%E3%82%BF%E3%83%BC%E3%83%88-)
 - [Node.js Quick Start 🟩](#nodejs-quick-start-)
 - [Components](#components)
   - [Mental Model](#mental-model)
@@ -63,15 +62,9 @@ Julep プロジェクトに新しい貢献者を迎えられることを嬉し�
 - [Understanding Tasks](#understanding-tasks)
   - [Lifecycle of a Task](#lifecycle-of-a-task)
   - [Types of Workflow Steps](#types-of-workflow-steps)
-    - [Common Steps](#common-steps)
-    - [Key-Value Steps](#key-value-steps)
-    - [Iteration Steps](#iteration-steps)
-    - [Conditional Steps](#conditional-steps)
-    - [Other Control Flow](#other-control-flow)
 - [Tool Types](#tool-types)
   - [User-defined `functions`](#user-defined-functions)
   - [`system` tools](#system-tools)
-    - [Available `system` resources and operations](#available-system-resources-and-operations)
   - [Built-in `integrations`](#built-in-integrations)
   - [Direct `api_calls`](#direct-api_calls)
 - [Integrations](#integrations)
@@ -79,13 +72,12 @@ Julep プロジェクトに新しい貢献者を迎えられることを嬉し�
   - [Adding Tools to Agents](#adding-tools-to-agents)
   - [Managing Sessions and Users](#managing-sessions-and-users)
   - [Document Integration and Search](#document-integration-and-search)
-  - [SDK リファレンス](#sdk-リファレンス)
-  - [API リファレンス](#api-リファレンス)
-- [ローカルクイックスタート](#ローカルクイックスタート)
-- [Julep と LangChain などの違いは何ですか?](#julep-と-langchain-などの違いは何ですか)
-  - [さまざまなユースケース](#さまざまなユースケース)
-  - [異なるフォームファクタ](#異なるフォームファクタ)
-
+  - [SDK リファレンス](#sdk-%E3%83%AA%E3%83%95%E3%82%A1%E3%83%AC%E3%83%B3%E3%82%B9)
+  - [API リファレンス](#api-%E3%83%AA%E3%83%95%E3%82%A1%E3%83%AC%E3%83%B3%E3%82%B9)
+- [ローカルクイックスタート](#%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%82%AF%E3%82%A4%E3%83%83%E3%82%AF%E3%82%B9%E3%82%BF%E3%83%BC%E3%83%88)
+- [Julep と LangChain などの違いは何ですか?](#julep-%E3%81%A8-langchain-%E3%81%AA%E3%81%A9%E3%81%AE%E9%81%95%E3%81%84%E3%81%AF%E4%BD%95%E3%81%A7%E3%81%99%E3%81%8B)
+  - [さまざまなユースケース](#%E3%81%95%E3%81%BE%E3%81%96%E3%81%BE%E3%81%AA%E3%83%A6%E3%83%BC%E3%82%B9%E3%82%B1%E3%83%BC%E3%82%B9)
+  - [異なるフォームファクタ](#%E7%95%B0%E3%81%AA%E3%82%8B%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A0%E3%83%95%E3%82%A1%E3%82%AF%E3%82%BF)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
