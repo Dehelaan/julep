@@ -1,13 +1,11 @@
 <sup>[English](README.md) | [中文翻译](README-CN.md) | [日本語翻訳](README-JA.md) | [French](README-FR.md)</sup>
 
 <div align="center" id="top">
- <img src="https://github.com/user-attachments/assets/10ba11e4-4ced-400e-a400-ee0f72541780" alt="julep" width="640" height="320" />
- <img src="https://github.com/user-attachments/assets/10ba11e4-4ced-400e-a400-ee0f72541780" alt="julep" width="640" height="320" />
+ <img src="https://socialify.git.ci/julep-ai/julep/image?description=1&descriptionEditable=Rapidly%20build%20AI%20workflows%20and%20agents&font=Source%20Code%20Pro&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fjulep-ai%2Fjulep%2Fdev%2F.github%2Fjulep-logo.svg&owner=1&forks=1&pattern=Solid&stargazers=1&theme=Auto" alt="julep" width="640" height="320" />
 </div>
 
 <p align="center">
   <br />
-  <a href="https://docs.julep.ai" rel="dofollow">探索文档（正在开发中）</a>
   <a href="https://docs.julep.ai" rel="dofollow">探索文档（正在开发中）</a>
   ·
   <a href="https://discord.com/invite/JTSBGRZrzj" rel="dofollow">不和谐</a>
@@ -74,7 +72,7 @@
 - [`系统` 工具](#system-tools)
 - [可用的系统资源和操作](#available-system-resources-and-operations)
 - [内置 `integrations`](#built-in-integrations)
--[直接`api_calls`]（#direct-api_calls）
+-[直接`api_calls`](#direct-api_calls)
 - [集成](#integrations)
 - [其他功能](#other-features)
 - [向代理添加工具](#adding-tools-to-agents)
@@ -363,7 +361,7 @@ main:
 
 为了发展故事情节，我们需要研究情节思路。
 我们应该研究什么？写下你认为有趣的情节想法的维基百科搜索查询。
-将输出作为 yaml 列表返回```yaml tags at the end of your response.
+将您的输出作为 yaml 列表返回```yaml tags at the end of your response.
     unwrap: true
     settings:
       model: gpt-4o-mini
@@ -498,7 +496,7 @@ const taskYaml = `
 方法：搜索
 
 主要的：
-# 步骤 1：生成情节想法
+# 步骤 1：产生情节想法
 - 迅速的：
 - 角色：系统
 内容：您是 {{agent.name}}。{{agent.about}}
@@ -1003,7 +1001,7 @@ Execute steps based on multiple conditions
 - 日志：“A 类处理”
 - 案例：_.category =='B'
 然后：
-- 日志：“B 类处理”
+- 日志：“B类处理”
 - case: _ # 默认情况
 然后：
 - 错误：未知类别
@@ -1033,7 +1031,7 @@ Pause the workflow for a specified duration
 秒：30
 # 分钟：1
 #小时数：1
-#天数：1
+# 天数：1
 ```
 
 </td>

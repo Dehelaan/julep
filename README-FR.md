@@ -1,13 +1,11 @@
 <sup>[English](README.md) | [中文翻译](README-CN.md) | [日本語翻訳](README-JA.md) | [French](README-FR.md)</sup>
 
 <div align="center" id="top">
- <img src="https://github.com/user-attachments/assets/10ba11e4-4ced-400e-a400-ee0f72541780" alt="julep" width="640" height="320" />
- <img src="https://github.com/user-attachments/assets/10ba11e4-4ced-400e-a400-ee0f72541780" alt="julep" width="640" height="320" />
+ <img src="https://socialify.git.ci/julep-ai/julep/image?description=1&descriptionEditable=Rapidly%20build%20AI%20workflows%20and%20agents&font=Source%20Code%20Pro&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fjulep-ai%2Fjulep%2Fdev%2F.github%2Fjulep-logo.svg&owner=1&forks=1&pattern=Solid&stargazers=1&theme=Auto" alt="julep" width="640" height="320" />
 </div>
 
 <p align="center">
   <br />
-  <a href="https://docs.julep.ai" rel="dofollow">Explorer les documents (en cours)</a>
   <a href="https://docs.julep.ai" rel="dofollow">Explorer les documents (en cours)</a>
   ·
   <a href="https://discord.com/invite/JTSBGRZrzj" rel="dofollow">Discorde</a>
@@ -81,13 +79,13 @@ Vos contributions, grandes ou petites, sont précieuses pour nous. Construisons 
 - [Gestion des sessions et des utilisateurs](#managing-sessions-and-users)
 - [Intégration et recherche de documents](#document-integration-and-search)
 - [Référence](#référence)
-  - [Référence du SDK](#référence-du-sdk)
-  - [Référence API](#référence-api)
-- [Démarrage rapide local](#démarrage-rapide-local)
-- [Quelle est la différence entre Julep et LangChain etc ?](#quelle-est-la-différence-entre-julep-et-langchain-etc-)
-  - [Différents cas d'utilisation](#différents-cas-dutilisation)
-  - [Facteur de forme différent](#facteur-de-forme-différent)
-  - [En résumé](#en-résumé)
+- [Référence SDK](#sdk-reference)
+- [Référence API](#api-reference)
+- [Démarrage rapide local](#local-quickstart)
+- [Quelle est la différence entre Julep et LangChain etc ?](#quelle-est-la-différence-entre-julep-et-langchain-etc)
+- [Différents cas d'utilisation](#different-use-cases)
+- [Facteur de forme différent](#different-form-factor)
+- [En résumé](#en-resumé)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -435,7 +433,7 @@ task_id=task.id,
 input={"idea": "Un chat qui apprend à voler"}
 )
 
-# 🎉 Regardez l'histoire et les panneaux de bandes dessinées se générer
+# 🎉 Regardez l'histoire et les panneaux de bande dessinée se générer
 while (result := client.executions.get(execution.id)).status n'est pas dans ['réussi', 'échec'] :
 print(résultat.statut, résultat.sortie)
 heure.sommeil(1)
@@ -1070,7 +1068,7 @@ Run a subworkflow and await its completion
 - rendement:
 flux de travail : données_de_processus
 Arguments:
-données_d'entrée : _. données_raw # <-- expression python
+données d'entrée : _. données brutes # <-- expression Python
 ```
 
 </td>
@@ -1647,7 +1645,7 @@ Julep, en revanche, s'intéresse davantage à la création d'agents d'IA persist
 Utilisez Julep si vous imaginez créer un assistant IA complexe qui doit :
 
 - Suivez les interactions des utilisateurs sur plusieurs jours ou semaines.
-- Exécutez des tâches planifiées, comme l'envoi de résumés quotidiens ou la surveillance de sources de données.
+- Exécutez des tâches planifiées, comme l'envoi de résumés quotidiens ou la surveillance des sources de données.
 - Prendre des décisions basées sur des interactions antérieures ou des données stockées.
 - Interagir avec plusieurs services externes dans le cadre de son flux de travail.
 
