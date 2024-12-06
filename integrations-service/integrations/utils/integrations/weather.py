@@ -1,9 +1,13 @@
+from beartype import beartype
 from langchain_community.utilities import OpenWeatherMapAPIWrapper
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from ...models import WeatherGetArguments, WeatherGetOutput, WeatherSetup
+from ...autogen.Tools import WeatherGetArguments, WeatherSetup
+from ...env import openweather_api_key  # Import env to access environment variables
+from ...models import WeatherGetOutput
 
 
+@beartype
 @retry(
     wait=wait_exponential(multiplier=1, min=4, max=10),
     reraise=True,
@@ -20,6 +24,9 @@ async def get(setup: WeatherSetup, arguments: WeatherGetArguments) -> WeatherGet
     location = arguments.location
 
     openweathermap_api_key = setup.openweathermap_api_key
+    if openweathermap_api_key == "DEMO_API_KEY":
+        openweathermap_api_key = openweather_api_key
+
     if not location:
         raise ValueError("Location parameter is required for weather data")
 

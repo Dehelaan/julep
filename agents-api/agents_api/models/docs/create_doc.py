@@ -54,7 +54,7 @@ def create_doc(
     Parameters:
         owner_type (Literal["user", "agent"]): The type of the owner of the document.
         owner_id (UUID): The UUID of the document owner.
-        id (UUID): The UUID of the document to be created.
+        doc_id (UUID): The UUID of the document to be created.
         data (CreateDocRequest): The content of the document.
     """
 
@@ -67,6 +67,7 @@ def create_doc(
     data.metadata = data.metadata or {}
 
     doc_data = data.model_dump()
+    doc_data.pop("embed_instruction", None)
     content = doc_data.pop("content")
 
     doc_data["owner_type"] = owner_type

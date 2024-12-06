@@ -20,21 +20,21 @@ class RequestArgs(TypedDict):
     headers: Optional[dict[str, str]]
 
 
-@auto_blob_store
+@auto_blob_store(deep=True)
 @beartype
 async def execute_api_call(
     api_call: ApiCallDef,
     request_args: RequestArgs,
 ) -> Any:
     try:
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        async with httpx.AsyncClient(timeout=600) as client:
             arg_url = request_args.pop("url", None)
             arg_headers = request_args.pop("headers", None)
 
             response = await client.request(
                 method=api_call.method,
                 url=arg_url or str(api_call.url),
-                headers=arg_headers or api_call.headers,
+                headers={**(arg_headers or {}), **(api_call.headers or {})},
                 follow_redirects=api_call.follow_redirects,
                 **request_args,
             )

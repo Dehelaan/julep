@@ -1,12 +1,14 @@
 <sup>[English](README.md) | [中文翻译](README-CN.md) | [日本語翻訳](README-JA.md) | [French](README-FR.md)</sup>
 
 <div align="center" id="top">
- <img src="https://socialify.git.ci/julep-ai/julep/image?description=1&descriptionEditable=API%20for%20AI%20agents%20and%20multi-step%20tasks&forks=1&name=1&owner=1&pattern=Solid&stargazers=1&font=Source%20Code%20Pro&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fjulep-ai%2Fjulep%2Fdev%2F.github%2Fjulep-logo.svg&theme=Auto" alt="julep" width="640" height="320" />
+ <img src="https://github.com/user-attachments/assets/10ba11e4-4ced-400e-a400-ee0f72541780" alt="julep" width="640" height="320" />
+ <img src="https://github.com/user-attachments/assets/10ba11e4-4ced-400e-a400-ee0f72541780" alt="julep" width="640" height="320" />
 </div>
 
 <p align="center">
   <br />
-  <a href="https://docs.julep.ai" rel="dofollow">Explorer les documents</a>
+  <a href="https://docs.julep.ai" rel="dofollow">Explorer les documents (en cours)</a>
+  <a href="https://docs.julep.ai" rel="dofollow">Explorer les documents (en cours)</a>
   ·
   <a href="https://discord.com/invite/JTSBGRZrzj" rel="dofollow">Discorde</a>
   ·
@@ -28,14 +30,12 @@
 ---
 
 > [!REMARQUE]
-> 👨‍💻 Vous êtes ici pour l'événement devfest.ai ? Rejoignez notre [Discord](https://discord.com/invite/JTSBGRZrzj) et consultez les détails ci-dessous.
->
 > Obtenez votre clé API [ici](https://dashboard-dev.julep.ai).
 
 <details>
-<summary><b>🌟 Contributeurs et participants au DevFest.AI</b>(Cliquez pour agrandir)</summary>
+<summary><b>Contributions 🌟</b>(Cliquez pour agrandir)</summary>
 
-## 🌟 Appel aux contributeurs !
+## Appel aux contributeurs 🌟
 
 Nous sommes ravis d'accueillir de nouveaux contributeurs au projet Julep ! Nous avons créé plusieurs « bons premiers numéros » pour vous aider à démarrer. Voici comment vous pouvez contribuer :
 
@@ -45,56 +45,49 @@ Nous sommes ravis d'accueillir de nouveaux contributeurs au projet Julep ! Nous 
 
 Vos contributions, grandes ou petites, sont précieuses pour nous. Construisons ensemble quelque chose d'extraordinaire ! 🚀
 
-### 🎉 DevFest.AI octobre 2024
-
-Des nouvelles passionnantes ! Nous participons au DevFest.AI tout au long du mois d'octobre 2024 ! 🗓️
-
-- Contribuez à Julep pendant cet événement et obtenez une chance de gagner de superbes produits et cadeaux Julep ! 🎁
-- Rejoignez des développeurs du monde entier pour contribuer aux référentiels d'IA et participer à des événements incroyables.
-- Un grand merci à DevFest.AI pour l'organisation de cette fantastique initiative !
-
-> [!TIP]
-> Prêt à vous joindre à la fête ? **[Tweetez que vous participez](https://twitter.com/intent/tweet?text=Pumped%20to%20be%20participating%20in%20%40devfestai%20with%20%40julep_ai%20building%20%23ai%20%20%23agents%20%23workflows%20Let's%20gooo!%20https%3A%2F%2Fgit.new%2Fjulep)** et commençons à coder ! 🖥️
-
-![Julep DevFest.AI](https://media.giphy.com/media/YjyUeyotft6epaMHtU/giphy.gif)
-
 </details>
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<h3>📖 Table of Contents</h3>
+<h3>📖 Table des matières</h3>
 
-- [Introduction](#introduction)
-- [Principales caractéristiques](#principales-caract%C3%A9ristiques)
-- [Exemple rapide](#exemple-rapide)
+- [Appel à contributeurs 🌟](#call-for-contributors-)
+- [Présentation](#introduction)
+- [Caractéristiques principales](#key-features)
+- [Exemple rapide](#quick-example)
 - [Installation](#installation)
-- [Démarrage rapide de Python 🐍](#d%C3%A9marrage-rapide-de-python-)
-- [Node.js Quick Start 🟩](#nodejs-quick-start-)
-  - [Step 1: Create an Agent](#step-1-create-an-agent)
-- [Components](#components)
-  - [Mental Model](#mental-model)
+- [Démarrage rapide de Python 🐍](#python-quick-start-)
+- [Démarrage rapide de Node.js 🟩](#nodejs-quick-start-)
+- [Composants](#composants)
+- [Modèle mental](#mental-model)
 - [Concepts](#concepts)
-- [Understanding Tasks](#understanding-tasks)
-  - [Lifecycle of a Task](#lifecycle-of-a-task)
-  - [Types of Workflow Steps](#types-of-workflow-steps)
-- [Tool Types](#tool-types)
-  - [User-defined `functions`](#user-defined-functions)
-  - [`system` tools](#system-tools)
-  - [Built-in `integrations`](#built-in-integrations)
-  - [Direct `api_calls`](#direct-api_calls)
-- [Integrations](#integrations)
-- [Other Features](#other-features)
-  - [Adding Tools to Agents](#adding-tools-to-agents)
-  - [Managing Sessions and Users](#managing-sessions-and-users)
-  - [Document Integration and Search](#document-integration-and-search)
-- [Référence](#r%C3%A9f%C3%A9rence)
-  - [Référence du SDK](#r%C3%A9f%C3%A9rence-du-sdk)
-  - [Référence API](#r%C3%A9f%C3%A9rence-api)
-- [Démarrage rapide local](#d%C3%A9marrage-rapide-local)
-- [Quelle est la différence entre Julep et LangChain etc ?](#quelle-est-la-diff%C3%A9rence-entre-julep-et-langchain-etc-)
-  - [Différents cas d'utilisation](#diff%C3%A9rents-cas-dutilisation)
-  - [Facteur de forme différent](#facteur-de-forme-diff%C3%A9rent)
-  - [En résumé](#en-r%C3%A9sum%C3%A9)
+- [Comprendre les tâches](#understanding-tasks)
+- [Cycle de vie d'une tâche](#cycle-de-vie-d-une-tâche)
+- [Types d'étapes de flux de travail](#types-of-workflow-steps)
+- [Étapes courantes](#étapes-communes)
+- [Étapes clé-valeur](#étapes-clé-valeur)
+- [Étapes d'itération](#iteration-steps)
+- [Étapes conditionnelles](#étapes-conditionnelles)
+- [Autre flux de contrôle](#other-control-flow)
+- [Types d'outils](#types-d'outils)
+- [`Fonctions` définies par l'utilisateur](#user-defined-functions)
+- [outils système](#outils-système)
+- [Ressources et opérations « système » disponibles](#available-system-resources-and-operations)
+- [`Intégrations` intégrées](#integrations-integrées)
+- [Appels directs `api_calls`](#appels directs-api_calls)
+- [Intégrations](#intégrations)
+- [Autres fonctionnalités](#other-features)
+- [Ajout d'outils aux agents](#adding-tools-to-agents)
+- [Gestion des sessions et des utilisateurs](#managing-sessions-and-users)
+- [Intégration et recherche de documents](#document-integration-and-search)
+- [Référence](#référence)
+  - [Référence du SDK](#référence-du-sdk)
+  - [Référence API](#référence-api)
+- [Démarrage rapide local](#démarrage-rapide-local)
+- [Quelle est la différence entre Julep et LangChain etc ?](#quelle-est-la-différence-entre-julep-et-langchain-etc-)
+  - [Différents cas d'utilisation](#différents-cas-dutilisation)
+  - [Facteur de forme différent](#facteur-de-forme-différent)
+  - [En résumé](#en-résumé)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -135,7 +128,7 @@ Alors que de nombreuses applications d'IA se limitent à des chaînes simples et
 Imaginez un agent d’IA de recherche capable d’effectuer les opérations suivantes :
 
 1. **Prenez un sujet**,
-2. **Proposez 100 requêtes de recherche** pour ce sujet,
+2. **Proposez 30 requêtes de recherche** pour ce sujet,
 3. Effectuez ces **recherches Web en parallèle**,
 4. **Résumez** les résultats,
 5. Envoyez le **résumé à Discord**.
@@ -155,6 +148,9 @@ input_schema:
     topic:
       type: string
       description: The main topic to research
+    num_questions:
+      type: integer
+      description: The number of search queries to generate
 
 # Define the tools that the agent can use
 tools:
@@ -163,12 +159,12 @@ tools:
     integration:
       provider: brave
       setup:
-        api_key: BSAqES7dj9d... # dummy key
+        api_key: <your-brave-api-key>
 
   - name: discord_webhook
     type: api_call
     api_call:
-      url: https://eobuxj02se0n.m.pipedream.net # dummy requestbin
+      url: https://discord.com/api/webhooks/<your-webhook-id>/<your-webhook-token>
       method: POST
       headers:
         Content-Type: application/json
@@ -180,52 +176,57 @@ tools:
 
 # Define the main workflow
 main:
-  - prompt:
-      - role: system
-        content: >-
-          You are a research assistant.
-          Generate 100 diverse search queries related to the topic:
-          {{inputs[0].topic}}
+- prompt:
+    - role: system
+      content: >-
+        You are a research assistant.
+        Generate {{inputs[0].num_questions|default(30, true)}} diverse search queries related to the topic:
+        {{inputs[0].topic}}
 
-          Write one query per line.
-    unwrap: true
+        Write one query per line.
+  unwrap: true
 
-  # Evaluate the search queries using a simple python expression
-  - evaluate:
-      search_queries: "_.split('\n')"
+# Evaluate the search queries using a simple python expression
+- evaluate:
+    search_queries: "_.split(NEWLINE)"
 
-  # Run the web search in parallel for each query
-  - over: "_.search_queries"
-    map:
-      tool: web_search
-      arguments:
-        query: "_"
-    parallelism: 10
+# Run the web search in parallel for each query
+- over: "_.search_queries"
+  map:
+    tool: web_search
+    arguments:
+      query: "_"
+  parallelism: 5
 
-  # Collect the results from the web search
-  - evaluate:
-      results: "'\n'.join([item.result for item in _])"
+# Collect the results from the web search
+- evaluate:
+    search_results: _
 
-  # Summarize the results
-  - prompt:
-      - role: system
-        content: >
-          You are a research summarizer. Create a comprehensive summary of the following research results on the topic {{inputs[0].topic}}.
-          The summary should be well-structured, informative, and highlight key findings and insights:
-          {{_.results}}
-    unwrap: true
-    settings:
-      model: gpt-4o-mini
+# Summarize the results
+- prompt:
+    - role: system
+      content: >
+        You are a research summarizer. Create a comprehensive summary of the following research results on the topic {{inputs[0].topic}}.
+        The summary should be well-structured, informative, and highlight key findings and insights. Keep the summary concise and to the point.
+        The length of the summary should be less than 150 words.
+        Here are the search results:
+        {{_.search_results}}
+  unwrap: true
+  settings:
+    model: gpt-4o-mini
+
+- evaluate:
+    discord_message: |-
+      f'''
+      **Research Summary for {inputs[0].topic}**
+      {_}
+      '''
 
   # Send the summary to Discord
-  - tool: discord_webhook
-    arguments:
-      content: |-
-        f'''
-        **Research Summary for {inputs[0].topic}**
-
-        {_}
-        '''
+- tool: discord_webhook
+  arguments:
+    json_: 
+      content: _.discord_message[:2000] # Discord has a 2000 character limit
 ```
 
 Dans cet exemple, Julep gérera automatiquement les exécutions parallèles, réessayera les étapes ayant échoué, renverra les requêtes API et maintiendra les tâches en cours d'exécution de manière fiable jusqu'à leur achèvement.
@@ -331,6 +332,7 @@ description: Create a story based on an idea.
 
 tools:
   - name: research_wikipedia
+    type: integration
     integration:
       provider: wikipedia
       method: search
@@ -433,7 +435,7 @@ task_id=task.id,
 input={"idea": "Un chat qui apprend à voler"}
 )
 
-# 🎉 Regardez l'histoire et les panneaux de bande dessinée se générer
+# 🎉 Regardez l'histoire et les panneaux de bandes dessinées se générer
 while (result := client.executions.get(execution.id)).status n'est pas dans ['réussi', 'échec'] :
 print(résultat.statut, résultat.sortie)
 heure.sommeil(1)
@@ -457,8 +459,6 @@ You can find the full python example [here](example.py).
 </div>
 
 ## Node.js Quick Start 🟩
-
-### Step 1: Create an Agent
 
 ```javascript
 // Étape 0 : Configuration
@@ -1145,8 +1145,6 @@ contenu : '"salut"' # <-- expression python
 
 Whenever julep encounters a _user-defined function_, it pauses, giving control back to the client and waits for the client to run the function call and give the results back to julep.
 
-> [!TIP] > **Example cookbook**: [cookbooks/13-Error_Handling_and_Recovery.py](https://github.com/julep-ai/julep/blob/dev/cookbooks/13-Error_Handling_and_Recovery.py)
-
 ### `system` tools
 
 Built-in tools that can be used to call the julep APIs themselves, like triggering a task execution, appending to a metadata field, etc.
@@ -1226,7 +1224,7 @@ Additional operations available for some resources:
 
 Note: The availability of these operations may vary depending on the specific resource and implementation details.
 
-> [!TIP] > **Example cookbook**: [cookbooks/10-Document_Management_and_Search.py](https://github.com/julep-ai/julep/blob/dev/cookbooks/10-Document_Management_and_Search.py)
+> [!TIP] > **Example cookbook**: [cookbooks/06-browser-use.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/06-browser-use.ipynb)
 
 ### Built-in `integrations`
 
@@ -1234,7 +1232,7 @@ Julep comes with a number of built-in integrations (as described in the section 
 
 See [Integrations](#integrations) for details on the available integrations.
 
-> [!TIP] > **Example cookbook**: [cookbooks/01-Website_Crawler_using_Spider.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/01-Website_Crawler_using_Spider.ipynb)
+> [!TIP] > **Example cookbook**: [cookbooks/01-website-crawler.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/01-website-crawler.ipynb)
 
 ### Direct `api_calls`
 
@@ -1292,7 +1290,7 @@ résultat : chaîne # Le résultat de la recherche Brave
 
 <td>
 
-**Example cookbook**: [cookbooks/03-SmartResearcher_With_WebSearch.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/03-SmartResearcher_With_WebSearch.ipynb)
+**Example cookbook**: [cookbooks/02-sarcastic-news-headline-generator.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/02-sarcastic-news-headline-generator.ipynb)
 
 </td>
 </tr>
@@ -1315,6 +1313,11 @@ documents : liste # Les documents chargés à partir des URL
 
 </td>
 
+<td>
+
+**Example cookbook**: [cookbooks/06-browser-use.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/06-browser-use.ipynb)
+
+</td>
 </tr>
 <tr>
 <td> <b>Email</b> </td>
@@ -1366,7 +1369,7 @@ documents : liste # Les documents renvoyés par l'araignée
 
 <td>
 
-**Example cookbook**: [cookbooks/01-Website_Crawler_using_Spider.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/01-Website_Crawler_using_Spider.ipynb)
+**Example cookbook**: [cookbooks/01-website-crawler.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/01-website-crawler.ipynb)
 
 </td>
 </tr>
@@ -1389,7 +1392,7 @@ résultat : chaîne # Les données météorologiques pour l'emplacement spécif
 
 <td>
 
-**Example cookbook**: [cookbooks/04-TripPlanner_With_Weather_And_WikiInfo.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/04-TripPlanner_With_Weather_And_WikiInfo.ipynb)
+**Example cookbook**: [cookbooks/03-trip-planning-assistant.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/03-trip-planning-assistant.ipynb)
 
 </td>
 </tr>
@@ -1401,7 +1404,7 @@ résultat : chaîne # Les données météorologiques pour l'emplacement spécif
 ```YAML
 Arguments:
 requête : chaîne # La chaîne de requête de recherche
-load_max_docs : entier # Nombre maximal de documents à charger (par défaut : 2)
+load_max_docs : entier # (facultatif) Nombre maximal de documents à charger. La valeur par défaut est 2.
 
 sortir:
 documents : liste # Les documents renvoyés par la recherche sur Wikipédia
@@ -1411,10 +1414,91 @@ documents : liste # Les documents renvoyés par la recherche sur Wikipédia
 
 <td>
 
-**Example cookbook**: [cookbooks/04-TripPlanner_With_Weather_And_WikiInfo.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/04-TripPlanner_With_Weather_And_WikiInfo.ipynb)
+**Example cookbook**: [cookbooks/03-trip-planning-assistant.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/03-trip-planning-assistant.ipynb)
 
 </td>
 </tr>
+
+<tr>
+<td> <b>FFmpeg</b> </td>
+<td>
+
+```YAML
+Arguments:
+cmd : chaîne # La commande FFmpeg à exécuter
+fichier : chaîne # Le fichier codé en base64 à traiter
+
+sortir:
+fileoutput : chaîne # Le fichier de sortie de la commande FFmpeg en codage base64
+résultat : booléen # Si la commande FFmpeg a été exécutée avec succès
+mime_type : chaîne # Le type MIME du fichier de sortie
+```
+
+</td>
+
+</tr>
+
+<tr>
+<td> <b>Llama Parse</b> </td>
+<td>
+
+```YAML
+installation:
+llamaparse_api_key: string # La clé API pour Llama Parse
+paramètres : dict # (facultatif) Paramètres supplémentaires pour l'intégration de Llama Parse
+
+Arguments:
+fichier : chaîne | tableau<string># Le fichier codé en base64 à analyser ou un tableau d'URL http/https à charger.
+nom de fichier : chaîne # (facultatif). Le nom de fichier du fichier. La valeur par défaut est un UUID aléatoire. Utilisé uniquement si le fichier est une chaîne codée en base64.
+params : dict # (facultatif) Paramètres supplémentaires pour l'intégration de Llama Parse. Remplace les paramètres de configuration.
+base64 : booléen # Indique si le fichier d'entrée est encodé en base64. La valeur par défaut est false.
+
+sortir:
+documents : liste # Les données analysées du document
+```
+
+</td>
+
+</tr>
+
+<tr>
+<td> <b>Cloudinary</b> </td>
+<td>
+
+```YAML
+
+méthode : media_upload | media_edit # La méthode à utiliser pour l'intégration Cloudinary
+
+installation:
+cloudinary_cloud_name : chaîne # Votre nom de cloud Cloudinary
+cloudinary_api_key : chaîne # Votre clé API Cloudinary
+cloudinary_api_secret : chaîne # Votre secret d'API Cloudinary
+paramètres : dict # (facultatif) Paramètres supplémentaires pour l'intégration Cloudinary
+
+Arguments:
+fichier : chaîne # L'URL du téléchargement du fichier. Disponible uniquement pour la méthode media_upload.
+upload_params : dict # (facultatif) Paramètres supplémentaires pour le téléchargement. Disponible uniquement pour la méthode media_upload.
+public_id : chaîne # (facultatif) L'ID public du fichier. Pour la méthode media_edit, il est OBLIGATOIRE. Pour la méthode media_upload, il est facultatif. La valeur par défaut est un UUID aléatoire.
+transformation : list[dict] # Les transformations à appliquer au fichier. Disponible uniquement pour la méthode media_edit.
+return_base64 : booléen # Indique si le fichier doit être renvoyé en codage base64. La valeur par défaut est false.
+
+sortir:
+url : chaîne # L'URL du fichier téléchargé. Disponible uniquement pour la méthode media_upload.
+meta_data : dict # Métadonnées supplémentaires provenant de la réponse de téléchargement. Disponible uniquement pour la méthode media_upload.
+public_id : chaîne # L'ID public du fichier téléchargé. Disponible uniquement pour la méthode media_upload.
+turned_url : chaîne # (facultatif) L'URL transformée. Disponible uniquement pour la méthode media_edit.
+base64 : chaîne # (Facultatif) Le fichier codé en base64 si return_base64 est vrai.
+```
+
+</td>
+
+<td>
+
+**Example cookbook**: [cookbooks/05-video-processing-with-natural-language.ipynb](https://github.com/julep-ai/julep/blob/dev/cookbooks/05-video-processing-with-natural-language.ipynb)
+
+</td>
+</tr>
+
 </table>
 
 For more details, refer to our [Integrations Documentation](#integrations).
@@ -1563,7 +1647,7 @@ Julep, en revanche, s'intéresse davantage à la création d'agents d'IA persist
 Utilisez Julep si vous imaginez créer un assistant IA complexe qui doit :
 
 - Suivez les interactions des utilisateurs sur plusieurs jours ou semaines.
-- Exécutez des tâches planifiées, comme l'envoi de résumés quotidiens ou la surveillance des sources de données.
+- Exécutez des tâches planifiées, comme l'envoi de résumés quotidiens ou la surveillance de sources de données.
 - Prendre des décisions basées sur des interactions antérieures ou des données stockées.
 - Interagir avec plusieurs services externes dans le cadre de son flux de travail.
 

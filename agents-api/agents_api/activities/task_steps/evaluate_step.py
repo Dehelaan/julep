@@ -9,7 +9,7 @@ from ...common.storage_handler import auto_blob_store
 from ...env import testing
 
 
-@auto_blob_store
+@auto_blob_store(deep=True)
 @beartype
 async def evaluate_step(
     context: StepContext,
@@ -23,7 +23,7 @@ async def evaluate_step(
             else context.current_step.evaluate
         )
 
-        values = context.model_dump(include_remote=True) | additional_values
+        values = await context.prepare_for_step(include_remote=True) | additional_values
 
         output = simple_eval_dict(expr, values)
         result = StepOutcome(output=output)

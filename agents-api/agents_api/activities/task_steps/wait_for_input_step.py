@@ -8,14 +8,14 @@ from ...env import testing
 from .base_evaluate import base_evaluate
 
 
-@auto_blob_store
+@auto_blob_store(deep=True)
 @beartype
 async def wait_for_input_step(context: StepContext) -> StepOutcome:
     try:
         assert isinstance(context.current_step, WaitForInputStep)
 
         exprs = context.current_step.wait_for_input.info
-        output = await base_evaluate(exprs, context.model_dump())
+        output = await base_evaluate(exprs, await context.prepare_for_step())
 
         result = StepOutcome(output=output)
         return result

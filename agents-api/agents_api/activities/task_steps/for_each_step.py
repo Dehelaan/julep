@@ -1,5 +1,3 @@
-import logging
-
 from beartype import beartype
 from temporalio import activity
 
@@ -13,19 +11,19 @@ from ...env import testing
 from .base_evaluate import base_evaluate
 
 
-@auto_blob_store
+@auto_blob_store(deep=True)
 @beartype
 async def for_each_step(context: StepContext) -> StepOutcome:
     try:
         assert isinstance(context.current_step, ForeachStep)
 
         output = await base_evaluate(
-            context.current_step.foreach.in_, context.model_dump()
+            context.current_step.foreach.in_, await context.prepare_for_step()
         )
         return StepOutcome(output=output)
 
     except BaseException as e:
-        logging.error(f"Error in for_each_step: {e}")
+        activity.logger.error(f"Error in for_each_step: {e}")
         return StepOutcome(error=str(e))
 
 

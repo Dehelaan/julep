@@ -1,5 +1,6 @@
 """This module contains functions for searching documents in the CozoDB based on embedding queries."""
 
+import json
 import re
 from typing import Any, Literal, TypeVar
 from uuid import UUID
@@ -38,6 +39,7 @@ T = TypeVar("T")
             "id": d["owner_id"],
             "role": d["owner_type"],
         },
+        "metadata": d.get("metadata", {}),
         **d,
     },
 )
@@ -49,6 +51,7 @@ def search_docs_by_text(
     owners: list[tuple[Literal["user", "agent"], UUID]],
     query: str,
     k: int = 3,
+    metadata_filter: dict[str, Any] = {},
 ) -> tuple[list[str], dict]:
     """
     Searches for document snippets in CozoDB by embedding query.
@@ -57,7 +60,14 @@ def search_docs_by_text(
         owners (list[tuple[Literal["user", "agent"], UUID]]): The type of the owner of the documents.
         query (str): The query string.
         k (int, optional): The number of nearest neighbors to retrieve. Defaults to 3.
+        metadata_filter (dict[str, Any]): Dictionary to filter agents based on metadata.
     """
+    metadata_filter_str = ", ".join(
+        [
+            f"metadata->{json.dumps(k)} == {json.dumps(v)}"
+            for k, v in metadata_filter.items()
+        ]
+    )
 
     owners: list[list[str]] = [
         [owner_type, str(owner_id)] for owner_type, owner_id in owners
@@ -83,8 +93,10 @@ def search_docs_by_text(
             *docs {{
                 owner_type,
                 owner_id,
-                doc_id
+                doc_id,
+                metadata,
             }}
+            {', ' + metadata_filter_str if metadata_filter_str.strip() else ''}
 
         search_result[
             doc_id,
@@ -125,11 +137,12 @@ def search_docs_by_text(
 
         m[
             doc_id,
-            collect(snippet),
+            snippet,
             distance,
             title,
             owner_type,
             owner_id,
+            metadata,
         ] :=
             candidate[doc_id],
             *docs {{
@@ -137,6 +150,7 @@ def search_docs_by_text(
                 owner_id,
                 doc_id,
                 title,
+                metadata,
             }},
             search_result [
                 doc_id,
@@ -153,19 +167,21 @@ def search_docs_by_text(
             id,
             owner_type,
             owner_id,
-            snippets,
+            snippet,
             distance,
             title,
+            metadata,
         ] := 
             candidate[id],
             input[owner_type, owner_id],
             m[
                 id,
-                snippets,
+                snippet,
                 distance,
                 title,
                 owner_type,
                 owner_id,
+                metadata,
             ]
 
         # Sort the results by distance to find the closest matches

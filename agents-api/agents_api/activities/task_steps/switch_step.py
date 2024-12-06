@@ -11,7 +11,7 @@ from ...env import testing
 from ..utils import get_evaluator
 
 
-@auto_blob_store
+@auto_blob_store(deep=True)
 @beartype
 async def switch_step(context: StepContext) -> StepOutcome:
     try:
@@ -21,7 +21,7 @@ async def switch_step(context: StepContext) -> StepOutcome:
         output: int = -1
         cases: list[str] = [c.case for c in context.current_step.switch]
 
-        evaluator = get_evaluator(names=context.model_dump())
+        evaluator = get_evaluator(names=await context.prepare_for_step())
 
         for i, case in enumerate(cases):
             result = evaluator.eval(case)

@@ -5,18 +5,28 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install Poetry
-RUN pip install poetry
+# Install system dependencies and FFmpeg with all required libraries
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    libavcodec-extra \
+    libavformat-dev \
+    libavutil-dev \
+    libswscale-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy only requirements to cache them in docker layer
-COPY pyproject.toml poetry.lock* /app/
+COPY --from=ghcr.io/astral-sh/uv:0.5.5 /uv /uvx /bin/
 
-# Project initialization:
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi
+COPY .python-version pyproject.toml uv.lock ./
 
-# Copy project
+RUN \
+  uv sync --frozen --all-extras --no-group dev --color never --python-preference system
+
 COPY . ./
 
-# Run the application
-ENTRYPOINT ["python", "-m", "integrations.web", "--host", "0.0.0.0", "--port", "8000"]
+# Set proper signal handling
+ENV PYTHONUNBUFFERED=1
+ENV GUNICORN_CMD_ARGS="--capture-output --enable-stdio-inheritance"
+
+# Run the application with proper signal handling
+ENTRYPOINT ["uv", "run", "gunicorn", "integrations.web:app", "-c", "gunicorn_conf.py"]

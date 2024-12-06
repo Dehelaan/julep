@@ -4,6 +4,7 @@ from uuid import UUID, uuid4
 from cozo_migrate.api import apply, init
 from fastapi.testclient import TestClient
 from pycozo import Client as CozoClient
+from pycozo_async import Client as AsyncCozoClient
 from temporalio.client import WorkflowHandle
 from ward import fixture
 
@@ -11,6 +12,7 @@ from agents_api.autogen.openapi_model import (
     CreateAgentRequest,
     CreateDocRequest,
     CreateExecutionRequest,
+    CreateFileRequest,
     CreateSessionRequest,
     CreateTaskRequest,
     CreateToolRequest,
@@ -28,6 +30,8 @@ from agents_api.models.execution.create_execution_transition import (
     create_execution_transition,
 )
 from agents_api.models.execution.create_temporal_lookup import create_temporal_lookup
+from agents_api.models.files.create_file import create_file
+from agents_api.models.files.delete_file import delete_file
 from agents_api.models.session.create_session import create_session
 from agents_api.models.session.delete_session import delete_session
 from agents_api.models.task.create_task import create_task
@@ -37,7 +41,12 @@ from agents_api.models.tools.delete_tool import delete_tool
 from agents_api.models.user.create_user import create_user
 from agents_api.models.user.delete_user import delete_user
 from agents_api.web import app
-from tests.utils import patch_embed_acompletion as patch_embed_acompletion_ctx
+from tests.utils import (
+    patch_embed_acompletion as patch_embed_acompletion_ctx,
+)
+from tests.utils import (
+    patch_s3_client,
+)
 
 EMBEDDING_SIZE: int = 1024
 
@@ -52,6 +61,31 @@ def cozo_client(migrations_dir: str = "./migrations"):
 
     init(client)
     apply(client, migrations_dir=migrations_dir, all_=True)
+
+    return client
+
+
+@fixture(scope="global")
+def cozo_clients_with_migrations(sync_client=cozo_client):
+    async_client = AsyncCozoClient()
+    async_client.embedded = sync_client.embedded
+    setattr(app.state, "async_cozo_client", async_client)
+
+    return sync_client, async_client
+
+
+@fixture(scope="global")
+def async_cozo_client(migrations_dir: str = "./migrations"):
+    # Create a new client for each test
+    # and initialize the schema.
+    client = AsyncCozoClient()
+    migrations_client = CozoClient()
+    setattr(migrations_client, "embedded", client.embedded)
+
+    setattr(app.state, "async_cozo_client", client)
+
+    init(migrations_client)
+    apply(migrations_client, migrations_dir=migrations_dir, all_=True)
 
     return client
 
@@ -78,6 +112,28 @@ def test_developer_id(cozo_client=cozo_client):
     ?[developer_id, email] <- [["{str(developer_id)}", "developers@julep.ai"]]
     :delete developers {{ developer_id, email }}
     """
+    )
+
+
+@fixture(scope="global")
+def test_file(client=cozo_client, developer_id=test_developer_id):
+    file = create_file(
+        developer_id=developer_id,
+        data=CreateFileRequest(
+            name="Hello",
+            description="World",
+            mime_type="text/plain",
+            content="eyJzYW1wbGUiOiAidGVzdCJ9",
+        ),
+        client=client,
+    )
+
+    yield file
+
+    delete_file(
+        developer_id=developer_id,
+        file_id=file.id,
+        client=client,
     )
 
 
@@ -149,8 +205,7 @@ def test_session(
     session = create_session(
         developer_id=developer_id,
         data=CreateSessionRequest(
-            agent=test_agent.id,
-            user=test_user.id,
+            agent=test_agent.id, user=test_user.id, metadata={"test": "test"}
         ),
         client=cozo_client,
     )
@@ -204,6 +259,8 @@ def test_user_doc(
         data=CreateDocRequest(title="Hello", content=["World"]),
         client=client,
     )
+
+    time.sleep(0.5)
 
     yield doc
 
@@ -413,3 +470,9 @@ def make_request(client=client, developer_id=test_developer_id):
         return client.request(method, url, headers=headers, **kwargs)
 
     return _make_request
+
+
+@fixture(scope="global")
+def s3_client():
+    with patch_s3_client() as s3_client:
+        yield s3_client

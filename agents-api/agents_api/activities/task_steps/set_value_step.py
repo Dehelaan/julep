@@ -11,7 +11,7 @@ from ...env import testing
 
 # TODO: We should use this step to signal to the parent workflow and set the value on the workflow context
 # SCRUM-2
-@auto_blob_store
+@auto_blob_store(deep=True)
 @beartype
 async def set_value_step(
     context: StepContext,
@@ -21,7 +21,7 @@ async def set_value_step(
     try:
         expr = override_expr if override_expr is not None else context.current_step.set
 
-        values = context.model_dump() | additional_values
+        values = await context.prepare_for_step() | additional_values
         output = simple_eval_dict(expr, values)
         result = StepOutcome(output=output)
 

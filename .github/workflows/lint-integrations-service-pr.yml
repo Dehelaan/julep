@@ -1,0 +1,43 @@
+name: Lint integrations-service
+run-name: ${{ github.actor }} is linting the code
+
+on:
+  pull_request:
+    paths:
+      - 'integrations-service/**'
+  push:
+    paths:
+      - 'integrations-service/**'
+
+jobs:
+  Lint-And-Format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+
+      - name: Set up python and install dependencies
+        run: |
+          cd integrations-service
+          uv python install
+          uv sync --all-extras --dev
+
+      - name: Lint and format
+        run: |
+          cd integrations-service
+          uv run poe format
+          uv run poe lint
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "refactor: Lint integrations-service (CI)"
+          branch: ${{ github.head_ref }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}

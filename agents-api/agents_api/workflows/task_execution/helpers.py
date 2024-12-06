@@ -10,24 +10,24 @@ from ...common.retry_policies import DEFAULT_RETRY_POLICY
 with workflow.unsafe.imports_passed_through():
     from ...activities import task_steps
     from ...autogen.openapi_model import (
+        EvaluateStep,
         TransitionTarget,
         Workflow,
         WorkflowStep,
     )
-    from ...common.protocol.remote import RemoteList
     from ...common.protocol.tasks import (
         ExecutionInput,
         StepContext,
     )
     from ...common.storage_handler import auto_blob_store_workflow
-    from ...env import task_max_parallelism
+    from ...env import task_max_parallelism, temporal_heartbeat_timeout
 
 
 @auto_blob_store_workflow
 async def continue_as_child(
     execution_input: ExecutionInput,
     start: TransitionTarget,
-    previous_inputs: RemoteList | list[Any],
+    previous_inputs: list[Any],
     user_state: dict[str, Any] = {},
 ) -> Any:
     info = workflow.info()
@@ -57,7 +57,7 @@ async def execute_switch_branch(
     execution_input: ExecutionInput,
     switch: list,
     index: int,
-    previous_inputs: RemoteList | list[Any],
+    previous_inputs: list[Any],
     user_state: dict[str, Any] = {},
 ) -> Any:
     workflow.logger.info(f"Switch step: Chose branch {index}")
@@ -66,7 +66,10 @@ async def execute_switch_branch(
     case_wf_name = f"`{context.cursor.workflow}`[{context.cursor.step}].case"
 
     case_task = execution_input.task.model_copy()
-    case_task.workflows = [Workflow(name=case_wf_name, steps=[chosen_branch.then])]
+    case_task.workflows = [
+        Workflow(name=case_wf_name, steps=[chosen_branch.then]),
+        *case_task.workflows,
+    ]
 
     case_execution_input = execution_input.model_copy()
     case_execution_input.task = case_task
@@ -87,19 +90,25 @@ async def execute_if_else_branch(
     context: StepContext,
     execution_input: ExecutionInput,
     then_branch: WorkflowStep,
-    else_branch: WorkflowStep,
+    else_branch: WorkflowStep | None,
     condition: bool,
-    previous_inputs: RemoteList | list[Any],
+    previous_inputs: list[Any],
     user_state: dict[str, Any] = {},
 ) -> Any:
     workflow.logger.info(f"If-Else step: Condition evaluated to {condition}")
     chosen_branch = then_branch if condition else else_branch
 
+    if chosen_branch is None:
+        chosen_branch = EvaluateStep(evaluate={"output": "_"})
+
     if_else_wf_name = f"`{context.cursor.workflow}`[{context.cursor.step}].if_else"
     if_else_wf_name += ".then" if condition else ".else"
 
     if_else_task = execution_input.task.model_copy()
-    if_else_task.workflows = [Workflow(name=if_else_wf_name, steps=[chosen_branch])]
+    if_else_task.workflows = [
+        Workflow(name=if_else_wf_name, steps=[chosen_branch]),
+        *if_else_task.workflows,
+    ]
 
     if_else_execution_input = execution_input.model_copy()
     if_else_execution_input.task = if_else_task
@@ -121,7 +130,7 @@ async def execute_foreach_step(
     execution_input: ExecutionInput,
     do_step: WorkflowStep,
     items: list[Any],
-    previous_inputs: RemoteList | list[Any],
+    previous_inputs: list[Any],
     user_state: dict[str, Any] = {},
 ) -> Any:
     workflow.logger.info(f"Foreach step: Iterating over {len(items)} items")
@@ -132,7 +141,10 @@ async def execute_foreach_step(
             f"`{context.cursor.workflow}`[{context.cursor.step}].foreach[{i}]"
         )
         foreach_task = execution_input.task.model_copy()
-        foreach_task.workflows = [Workflow(name=foreach_wf_name, steps=[do_step])]
+        foreach_task.workflows = [
+            Workflow(name=foreach_wf_name, steps=[do_step]),
+            *foreach_task.workflows,
+        ]
 
         foreach_execution_input = execution_input.model_copy()
         foreach_execution_input.task = foreach_task
@@ -156,7 +168,7 @@ async def execute_map_reduce_step(
     execution_input: ExecutionInput,
     map_defn: WorkflowStep,
     items: list[Any],
-    previous_inputs: RemoteList | list[Any],
+    previous_inputs: list[Any],
     user_state: dict[str, Any] = {},
     reduce: str | None = None,
     initial: Any = [],
@@ -170,7 +182,10 @@ async def execute_map_reduce_step(
             f"`{context.cursor.workflow}`[{context.cursor.step}].mapreduce[{i}]"
         )
         map_reduce_task = execution_input.task.model_copy()
-        map_reduce_task.workflows = [Workflow(name=workflow_name, steps=[map_defn])]
+        map_reduce_task.workflows = [
+            Workflow(name=workflow_name, steps=[map_defn]),
+            *map_reduce_task.workflows,
+        ]
 
         map_reduce_execution_input = execution_input.model_copy()
         map_reduce_execution_input.task = map_reduce_task
@@ -188,6 +203,7 @@ async def execute_map_reduce_step(
             args=[reduce, {"results": result, "_": output}],
             schedule_to_close_timeout=timedelta(seconds=30),
             retry_policy=DEFAULT_RETRY_POLICY,
+            heartbeat_timeout=timedelta(seconds=temporal_heartbeat_timeout),
         )
 
     return result
@@ -200,7 +216,7 @@ async def execute_map_reduce_step_parallel(
     execution_input: ExecutionInput,
     map_defn: WorkflowStep,
     items: list[Any],
-    previous_inputs: RemoteList | list[Any],
+    previous_inputs: list[Any],
     user_state: dict[str, Any] = {},
     initial: Any = [],
     reduce: str | None = None,
@@ -234,7 +250,10 @@ async def execute_map_reduce_step_parallel(
             # Note: Added PAR: prefix to easily identify parallel batches in logs
             workflow_name = f"PAR:`{context.cursor.workflow}`[{context.cursor.step}].mapreduce[{i}][{j}]"
             map_reduce_task = execution_input.task.model_copy()
-            map_reduce_task.workflows = [Workflow(name=workflow_name, steps=[map_defn])]
+            map_reduce_task.workflows = [
+                Workflow(name=workflow_name, steps=[map_defn]),
+                *map_reduce_task.workflows,
+            ]
 
             map_reduce_execution_input = execution_input.model_copy()
             map_reduce_execution_input.task = map_reduce_task
@@ -265,6 +284,7 @@ async def execute_map_reduce_step_parallel(
                 ],
                 schedule_to_close_timeout=timedelta(seconds=30),
                 retry_policy=DEFAULT_RETRY_POLICY,
+                heartbeat_timeout=timedelta(seconds=temporal_heartbeat_timeout),
             )
 
         except BaseException as e:

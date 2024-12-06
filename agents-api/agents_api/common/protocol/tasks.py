@@ -1,7 +1,10 @@
-from typing import Annotated, Any
+import asyncio
+from typing import Annotated, Any, Literal
 from uuid import UUID
 
+from beartype import beartype
 from temporalio import activity, workflow
+from temporalio.exceptions import ApplicationError
 
 with workflow.unsafe.imports_passed_through():
     from pydantic import BaseModel, Field, computed_field
@@ -10,6 +13,7 @@ with workflow.unsafe.imports_passed_through():
     from ...autogen.openapi_model import (
         Agent,
         CreateTaskRequest,
+        CreateToolRequest,
         CreateTransitionRequest,
         Execution,
         ExecutionStatus,
@@ -21,6 +25,7 @@ with workflow.unsafe.imports_passed_through():
         TaskSpecDef,
         TaskToolDef,
         Tool,
+        ToolRef,
         TransitionTarget,
         TransitionType,
         UpdateTaskRequest,
@@ -71,7 +76,15 @@ with workflow.unsafe.imports_passed_through():
 valid_transitions: dict[TransitionType, list[TransitionType]] = {
     # Start state
     "init": ["wait", "error", "step", "cancelled", "init_branch", "finish"],
-    "init_branch": ["wait", "error", "step", "cancelled", "finish_branch"],
+    "init_branch": [
+        "wait",
+        "error",
+        "step",
+        "cancelled",
+        "init_branch",
+        "finish_branch",
+        "finish",
+    ],
     # End states
     "finish": [],
     "error": [],
@@ -132,8 +145,8 @@ class ExecutionInput(BaseModel):
     execution: Execution
     task: TaskSpecDef
     agent: Agent
-    agent_tools: list[Tool]
-    arguments: dict[str, Any]
+    agent_tools: list[Tool | CreateToolRequest]
+    arguments: dict[str, Any] | RemoteObject
 
     # Not used at the moment
     user: User | None = None
@@ -147,20 +160,44 @@ class StepContext(BaseRemoteModel):
 
     @computed_field
     @property
-    def tools(self) -> list[Tool]:
+    def tools(self) -> list[Tool | CreateToolRequest]:
         execution_input = self.execution_input
         task = execution_input.task
         agent_tools = execution_input.agent_tools
 
+        step_tools: Literal["all"] | list[ToolRef | CreateToolRequest] = getattr(
+            self.current_step, "tools", "all"
+        )
+
+        if step_tools != "all":
+            if not all(
+                tool and isinstance(tool, CreateToolRequest) for tool in step_tools
+            ):
+                raise ApplicationError(
+                    "Invalid tools for step (ToolRef not supported yet)"
+                )
+
+            return step_tools
+
+        # Need to convert task.tools (list[TaskToolDef]) to list[Tool]
+        task_tools = []
+        for tool in task.tools:
+            tool_def = tool.model_dump()
+            task_tools.append(
+                CreateToolRequest(
+                    **{tool_def["type"]: tool_def.pop("spec"), **tool_def}
+                )
+            )
+
         if not task.inherit_tools:
-            return task.tools
+            return task_tools
 
         # Remove duplicates from agent_tools
         filtered_tools = [
             t for t in agent_tools if t.name not in map(lambda x: x.name, task.tools)
         ]
 
-        return filtered_tools + task.tools
+        return filtered_tools + task_tools
 
     @computed_field
     @property
@@ -200,21 +237,34 @@ class StepContext(BaseRemoteModel):
         return self.cursor.workflow == "main"
 
     def model_dump(self, *args, **kwargs) -> dict[str, Any]:
-        current_input = self.current_input
-        if activity.in_activity():
-            current_input = load_from_blob_store_if_remote(current_input)
-
         dump = super().model_dump(*args, **kwargs)
+        execution_input: dict = dump.pop("execution_input")
+
+        return dump | execution_input
+
+    async def prepare_for_step(
+        self, *args, include_remote: bool = True, **kwargs
+    ) -> dict[str, Any]:
+        current_input = self.current_input
+        inputs = self.inputs
+        if activity.in_activity() and include_remote:
+            await self.load_all()
+            inputs = await asyncio.gather(
+                *[load_from_blob_store_if_remote(input) for input in inputs]
+            )
+            current_input = await load_from_blob_store_if_remote(current_input)
 
         # Merge execution inputs into the dump dict
-        execution_input: dict = dump.pop("execution_input")
-        dump = {
-            **dump,
-            **execution_input,
-            "_": current_input,
-        }
+        dump = self.model_dump(*args, **kwargs)
+        dump["inputs"] = inputs
+        prepared = dump | {"_": current_input}
 
-        return dump
+        for i, input in enumerate(inputs):
+            prepared = prepared | {f"_{i}": input}
+            if i >= 100:
+                break
+
+        return prepared
 
 
 class StepOutcome(BaseModel):
@@ -223,10 +273,11 @@ class StepOutcome(BaseModel):
     transition_to: tuple[TransitionType, TransitionTarget] | None = None
 
 
+@beartype
 def task_to_spec(
     task: Task | CreateTaskRequest | UpdateTaskRequest | PatchTaskRequest, **model_opts
 ) -> TaskSpecDef | PartialTaskSpecDef:
-    task_data = task.model_dump(**model_opts)
+    task_data = task.model_dump(**model_opts, exclude={"task_id", "id", "agent_id"})
 
     if "tools" in task_data:
         del task_data["tools"]
@@ -235,13 +286,12 @@ def task_to_spec(
     for tool in task.tools:
         tool_spec = getattr(tool, tool.type)
 
-        tools.append(
-            TaskToolDef(
-                type=tool.type,
-                spec=tool_spec.model_dump(),
-                **tool.model_dump(exclude={"type"}),
-            )
+        tool_obj = dict(
+            type=tool.type,
+            spec=tool_spec.model_dump(),
+            **tool.model_dump(exclude={"type"}),
         )
+        tools.append(TaskToolDef(**tool_obj))
 
     workflows = [Workflow(name="main", steps=task_data.pop("main"))]
 
